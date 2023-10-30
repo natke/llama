@@ -1,5 +1,7 @@
 # Llama sample README
 
+This sample shows you how to run the Llama model with PyTorch, HuggingFace and ONNX Runtime.
+
 ## Dependencies
 
 * onnx
