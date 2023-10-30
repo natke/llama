@@ -1,0 +1,4 @@
+.onnx
+__cache_dir
+models
+*.download
