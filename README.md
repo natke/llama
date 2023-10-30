@@ -2,12 +2,12 @@
 
 ## Dependencies
 
-onnx
-onnxruntime (latest nightly)
-optimum
-torch (>= 2.2.0)
-transformers
-protobuf==3.20.3
+* onnx
+* onnxruntime (>= 1.17.0)
+* optimum (>= 1.14.0)
+* torch (>= 2.2.0)
+* transformers
+* protobuf==3.20.3
 
 ## Download the Meta model(s)
 
