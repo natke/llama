@@ -11,12 +11,10 @@ This sample shows you how to run the Llama model with PyTorch, HuggingFace and O
 * transformers
 * protobuf==3.20.3
 
-## Download the Meta model(s)
+## Get access to the Meta model(s)
 
-1. Sign up to get access to the Llama model on HuggingFace (e.g. https://huggingface.co/meta-llama/Llama-2-7b-hf)
-2. Download the weights using the script that is emailed from meta
-3. Change the name of the folder to `meta-llama/Llama-2-7b-hf`
-4. Download the `config.json` and the `generate_config.json` files from HuggingFace and add them to the above folder
+1. Sign up to get access to the Llama model on HuggingFace (e.g. https://huggingface.co/meta-llama/Llama-2-7b-hf-chat)
+
 
 ## A note on Llama prompting
 
@@ -29,13 +27,13 @@ This sample shows you how to run the Llama model with PyTorch, HuggingFace and O
 python run_llama_pt.py --name <model> --prompt <prompt>
 ```
 
-where <model> can be:
+where &lt;model&gt; can be:
 * `PY007/TinyLlama-1.1B-intermediate-step-480k-1T`
 * (default)`meta-llama/Llama-2-7b-hf` if you downloaded the meta weights
 
 ## Run Optimum ONNX model
 ```bash
-EXPORT TRANSFORMERS_CACHE=__cache_dir
+export TRANSFORMERS_CACHE=__cache_dir
 ```
 
 ```bash
@@ -65,14 +63,21 @@ Note: this step requires 54GB of memory
 
 3. Export the model
 
+   Note: you cannot have a local folder that is same as the string passed to the `-m` argument, as HuggingFace will look for the model in this folder rather than downloading it.
+
    ```bash
-   git clone <onnxruntime>
-   cd onnxruntime/onnxruntime/python/tools/transformers/
-   python -m models.llama.convert_to_onnx -m meta-llama/Llama-2-7b-hf --output meta-llama/Llama-2-7b-hf-onnx
-   cp meta-llama/Llama-2-7b-hf-onnx/* meta-llama/Llama-2-7b-hf
+   huggingface-cli login --token <token>
+   python -m models.llama.convert_to_onnx -m meta-llama/Llama-2-7b-chat-hf --output onnx
+   mv onnx/* meta-llama/Llama-2-7b-chat-hf
    ```
 
-4. Run the model
+4. Download the `config.json` and the `generate_config.json` files from HuggingFace and add them to the above folder
+    ```bash
+    curl -H "Authorization: Bearer <token>" https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/raw/main/config.json > config.json
+    curl -H "Authorization: Bearer <token>" https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/raw/main/generation_config.json > generate_config.json
+    ```
+
+5. Run the model
 
 ```bash
 python run_llama_opt_ort.py

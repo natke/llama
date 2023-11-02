@@ -6,14 +6,15 @@ from optimum.onnxruntime import ORTModelForCausalLM
 def load_model(name):
     return ORTModelForCausalLM.from_pretrained(
        f'models/{name}',
-       file_name=f"{name.split('/')[1]}_decoder_merged_model_fp32_opt.onnx",
+       file_name=f"{name.split('/')[1]}_decoder_merged_model_fp16.onnx",
        use_auth_token=True,
-       cache_dir="__cache_dir"
+       cache_dir="__cache_dir",
+       provider="CUDAExecutionProvider"
     )
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--name', type=str, default='meta-llama/Llama-2-7b-hf', help='Llama model name to export and run')
+    argparser.add_argument('--name', type=str, default='meta-llama/Llama-2-7b-chat-hf', help='Llama model name to export and run')
     argparser.add_argument('--prompt', type=str, default='I like walking my cute dog', help='Prompt to run Llama with')
 
     args = argparser.parse_args()
@@ -22,17 +23,15 @@ if __name__ == "__main__":
     prompt = args.prompt
 
 
-    #name = "meta-llama/Llama-2-7b-hf"
-    #name = "PY007/TinyLlama-1.1B-step-50K-105b"
     
     print("Loading tokenizer ...")
-    tokenizer = AutoTokenizer.from_pretrained(f"{name}", use_auth_token=True)
+    tokenizer = LlamaTokenizer.from_pretrained(f"{name}", use_auth_token=True)
 
     print("Loading model ...")
     model = load_model(name)
 
     print("Running tokenizer ...")
-    inputs = tokenizer(prompt, return_tensors="pt")
+    inputs = tokenizer(prompt, return_tensors="pt").to("cuda:0")
 
     print("Running generate ...")
     # Generate
