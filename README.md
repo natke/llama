@@ -29,12 +29,9 @@ python run_llama_pt.py --name <model> --prompt <prompt>
 
 where &lt;model&gt; can be:
 * `PY007/TinyLlama-1.1B-intermediate-step-480k-1T`
-* (default)`meta-llama/Llama-2-7b-hf` if you downloaded the meta weights
+* (default)`meta-llama/Llama-2-7b-hf` if you have access to the gated meta model
 
 ## Run Optimum ONNX model
-```bash
-export TRANSFORMERS_CACHE=__cache_dir
-```
 
 ```bash
 python run_llama_opt_onnx.py
@@ -63,7 +60,7 @@ Note: this step requires 54GB of memory
 
 3. Export the model
 
-   Note: you cannot have a local folder that is same as the string passed to the `-m` argument, as HuggingFace will look for the model in this folder rather than downloading it.
+   Note: you cannot have a local folder that is same as the string passed to the `-m` argument, as HuggingFace will look for the model in this folder rather than downloading it and will error if it is not there.
 
    ```bash
    huggingface-cli login --token <token>
@@ -79,9 +76,9 @@ Note: this step requires 54GB of memory
 
 5. Run the model
 
-```bash
-python run_llama_opt_ort.py
-```
+   ```bash
+   python run_llama_opt_ort.py
+   ```
 
-Same options.
+   Same options.
 
