@@ -6,15 +6,17 @@ from transformers import LlamaForCausalLM, LlamaTokenizer
 argparser = argparse.ArgumentParser()
 argparser.add_argument('--name', type=str, default='meta-llama/Llama-2-7b-hf', help='Llama model name to run')
 argparser.add_argument('--prompt', type=str, default='I like walking my cute dog', help='Prompt to run Llama with')
+argparser.add_argument('--device', type=str, default='cuda:0', help='Device to run on')
 
 args = argparser.parse_args()
 name = args.name
 prompt = args.prompt
+device = args.device
 
 tokenizer = LlamaTokenizer.from_pretrained(f"{name}", cache_dir="__cache_dir")
-model = LlamaForCausalLM.from_pretrained(f"{name}", cache_dir="__cache_dir")
+model = LlamaForCausalLM.from_pretrained(f"{name}", cache_dir="__cache_dir").half().to(device)
 
-inputs = tokenizer(prompt, return_tensors="pt")
+inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
 # Generate
 start_time = datetime.datetime.now()

@@ -5,8 +5,8 @@ from optimum.onnxruntime import ORTModelForCausalLM
 
 def load_model(name):
     return ORTModelForCausalLM.from_pretrained(
-       f'models/{name}',
-       file_name=f"{name.split('/')[1]}_decoder_merged_model_fp16.onnx",
+       f'models/{name}-ort',
+       file_name=f"rank_0_{name.split('/')[1]}_decoder_merged_model_fp16.onnx",
        use_auth_token=True,
        cache_dir="__cache_dir",
        provider="CUDAExecutionProvider"

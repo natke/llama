@@ -2,14 +2,15 @@
 
 This sample shows you how to run the Llama model with PyTorch, HuggingFace and ONNX Runtime.
 
+
 ## Dependencies
 
+* protobuf==3.20.3
 * onnx
-* onnxruntime (>= 1.17.0)
-* optimum (>= 1.14.0)
+* onnxruntime (>= 1.16.2)
 * torch (>= 2.2.0)
 * transformers
-* protobuf==3.20.3
+* optimum (>= 1.14.0)
 
 ## Get access to the Meta model(s)
 
@@ -29,6 +30,7 @@ python run_llama_pt.py --name <model> --prompt <prompt>
 
 where &lt;model&gt; can be:
 * `PY007/TinyLlama-1.1B-intermediate-step-480k-1T`
+* `PY007/TinyLlama-1.1B-Chat-v0.3`
 * (default)`meta-llama/Llama-2-7b-hf` if you have access to the gated meta model
 
 ## Run Optimum ONNX model
@@ -55,7 +57,7 @@ Note: this step requires 54GB of memory
 2. Install the nightly build of onnxruntime
 
   ```bash
-  
+  pip install --index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/ORT-Nightly/pypi/simple/ ort-nightly-gpu==1.17.0.dev20231102007
   ```
 
 3. Export the model
@@ -64,9 +66,13 @@ Note: this step requires 54GB of memory
 
    ```bash
    huggingface-cli login --token <token>
-   python -m models.llama.convert_to_onnx -m meta-llama/Llama-2-7b-chat-hf --output onnx
+   python -m onnxruntime.transformers.models.llama.convert_to_onnx -m meta-llama/Llama-2-7b-chat-hf --output onnx
    mv onnx/* meta-llama/Llama-2-7b-chat-hf
    ```
+
+   Notes on model variants and execution targets:
+   * Tiny Llama requires GQA
+   * GQA only works with fp16 CUDA
 
 4. Download the `config.json` and the `generate_config.json` files from HuggingFace and add them to the above folder
     ```bash
