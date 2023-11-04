@@ -13,8 +13,8 @@ name = args.name
 prompt = args.prompt
 device = args.device
 
-tokenizer = LlamaTokenizer.from_pretrained(f"{name}", cache_dir="__cache_dir")
-model = LlamaForCausalLM.from_pretrained(f"{name}", cache_dir="__cache_dir").half().to(device)
+tokenizer = LlamaTokenizer.from_pretrained(f"{name}", cache_dir="model_cache")
+model = LlamaForCausalLM.from_pretrained(f"{name}", cache_dir="model_cache").half().to(device)
 
 inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
@@ -27,4 +27,4 @@ end_time = datetime.datetime.now()
 
 print(output)
 seconds = (end_time - start_time).total_seconds()
-print(f"Tokens per second = {round(num_tokens / seconds, 1)} ({num_tokens} in {round(seconds, 1)})")
+print(f"Tokens per second = {round(num_tokens / seconds, 1)} ({num_tokens} in {round(seconds, 1)}s)")
