@@ -38,7 +38,7 @@ if __name__ == "__main__":
     model = load_model(name, precision, device)
 
     print("Running tokenizer ...")
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+    inputs = tokenizer(prompt, padding=True, return_tensors="pt").to(device)
 
     print("Running generate ...")
     # Generate

@@ -17,8 +17,6 @@ This sample shows you how to run the Llama model with PyTorch, HuggingFace and O
 1. Sign up to get access to the Llama model on HuggingFace (e.g. https://huggingface.co/meta-llama/Llama-2-7b-hf-chat)
 
 
-## A note on Llama prompting
-
 ## Notes on model variants and execution targets:
 * Tiny Llama requires GQA
 * GQA only works with fp16 CUDA
@@ -85,12 +83,18 @@ Note: this step requires 54GB of memory
 
    Same options.
 
+## Build ONNX Runtime from source
+
+```bash
+cd onnxruntime
+build.sh --config RelWithDebInfo --build_shared_lib --build_wheel --skip_tests --parallel --skip_submodule_sync --use_cuda
+```
 
 ## Upload the model to Azure blob storage
 
 ```bash
-az login --device-code
+az login --use-device-code
 az account set --subscription <subscription>
-az storage blob upload -f models/meta-llama/Llama-2-7b-chat-hf/Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx.data --container-name  models --account-name  nakershadevstorage 
+az storage blob upload -f models/meta-llama/Llama-2-7b-chat-hf/rank_0_Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx --container-name  models --account-name  nakershadevstorage 
 az storage blob upload -f models/meta-llama/Llama-2-7b-chat-hf/Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx.data --container-name  models --account-name  nakershadevstorage 
 ```
