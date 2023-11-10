@@ -81,7 +81,17 @@ Note: this step requires 54GB of memory
    python run_llama_opt_ort.py
    ```
 
-   Same options.
+   ```
+   usage: run_llama_opt_ort.py [-h] [--name NAME] [--prompt PROMPT] [--precision PRECISION] [--device DEVICE]
+
+   optional arguments:
+    -h, --help             show this help message and exit
+    --name NAME            Llama model name to export and run
+    --prompt PROMPT        Prompt to run Llama with
+    --precision PRECISION  The precision of the model to load
+    --device DEVICE        Where to run the model
+   ```
+
 
 ## Optional steps
 
