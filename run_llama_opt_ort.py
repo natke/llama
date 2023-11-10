@@ -33,6 +33,7 @@ if __name__ == "__main__":
     
     print("Loading tokenizer ...")
     tokenizer = LlamaTokenizer.from_pretrained(f"{name}", use_auth_token=True)
+    tokenizer.pad_token = "[PAD]"
 
     print("Loading model ...")
     model = load_model(name, precision, device)
@@ -43,7 +44,7 @@ if __name__ == "__main__":
     print("Running generate ...")
     # Generate
     start_time = datetime.datetime.now()  
-    generate_ids = model.generate(inputs.input_ids, max_new_tokens=200, do_sample=True, top_p=0.9)   
+    generate_ids = model.generate(**inputs, max_new_tokens=200, do_sample=True, top_p=0.9)   
     num_tokens = generate_ids.size(dim=1)
     output = tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0] 
     end_time = datetime.datetime.now()

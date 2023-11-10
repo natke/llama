@@ -53,10 +53,10 @@ Note: this step requires 54GB of memory
    ```
 
 
-2. Install the nightly build of onnxruntime
+2. Install onnxruntime
 
   ```bash
-  pip install --index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/ORT-Nightly/pypi/simple/ ort-nightly-gpu==1.17.0.dev20231102007
+  pip install onnxruntime-gpu
   ```
 
 3. Export the model
@@ -83,14 +83,16 @@ Note: this step requires 54GB of memory
 
    Same options.
 
-## Build ONNX Runtime from source
+## Optional steps
+
+### Build ONNX Runtime from source
 
 ```bash
 cd onnxruntime
 build.sh --config RelWithDebInfo --build_shared_lib --build_wheel --skip_tests --parallel --skip_submodule_sync --use_cuda
 ```
 
-## Upload the model to Azure blob storage
+### Upload the model to Azure blob storage
 
 ```bash
 az login --use-device-code
