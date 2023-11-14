@@ -26,7 +26,7 @@ if __name__ == "__main__":
     prompt = args.prompt
     precision = args.precision
     device = args.device
-    num_tokens = args.num_tokens
+    new_tokens = args.new_tokens
 
     if device == "cuda":
         provider = "CUDAExecutionProvider"
@@ -54,4 +54,5 @@ if __name__ == "__main__":
 
     print(output)  
     seconds = (end_time - start_time).total_seconds()
-    print(f"Tokens per second = {round(new_tokens / seconds, 1)} ({num_tokens} in {round(seconds, 1)}s)")
+    print(f"Total tokens per second = {round(num_tokens / seconds, 1)} ({num_tokens} in {round(seconds, 1)}s)")
+    print(f"New tokens per second = {round(new_tokens / seconds, 1)} ({new_tokens} in {round(seconds, 1)}s)")
