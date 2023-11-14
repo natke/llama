@@ -29,5 +29,6 @@ end_time = datetime.datetime.now()
 
 print(output)
 seconds = (end_time - start_time).total_seconds()
-print(f"Total tokens per second = {round(num_tokens / seconds, 1)} ({num_tokens} in {round(seconds, 1)}s)")
-print(f"New tokens per second = {round(new_tokens / seconds, 1)} ({new_tokens} in {round(seconds, 1)}s)")
+#print(f"Total tokens per second = {round(num_tokens / seconds, 1)} ({num_tokens} in {round(seconds, 1)}s)")
+#print(f"New tokens per second = {round(new_tokens / seconds, 1)} ({new_tokens} in {round(seconds, 2)}s)")
+print(f"PyTorch, {num_tokens}, {new_tokens}, {round(seconds, 2)}, {round(num_tokens / seconds, 1)}, {round(new_tokens / seconds, 1)}")
