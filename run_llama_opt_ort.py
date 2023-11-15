@@ -44,15 +44,19 @@ if __name__ == "__main__":
     print("Running tokenizer ...")
     inputs = tokenizer(prompt, padding=True, return_tensors="pt").to(device)
 
+    print(inputs.input_ids.shape)
+
     print("Running generate ...")
     # Generate
     start_time = datetime.datetime.now()  
     generate_ids = model.generate(**inputs, max_new_tokens=new_tokens, do_sample=True, top_p=0.9)   
     num_tokens = generate_ids.size(dim=1)
-    output = tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0] 
+    output = tokenizer.batch_decode(generate_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)[0] 
     end_time = datetime.datetime.now()
 
     print(output)  
+    print(len(output.split(" ")))
+    
     seconds = (end_time - start_time).total_seconds()
     #print(f"Total tokens per second = {round(num_tokens / seconds, 1)} ({num_tokens} in {round(seconds, 1)}s)")
     #print(f"New tokens per second = {round(new_tokens / seconds, 1)} ({new_tokens} in {round(seconds, 2)}s)")

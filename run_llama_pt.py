@@ -24,7 +24,7 @@ inputs = tokenizer(prompt, return_tensors="pt").to(device)
 start_time = datetime.datetime.now()
 generate_ids = model.generate(inputs.input_ids, max_new_tokens=new_tokens, do_sample=True, top_p=0.9)
 num_tokens = generate_ids.size(dim=1)
-output = tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+output = tokenizer.batch_decode(generate_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)[0]
 end_time = datetime.datetime.now()
 
 print(output)
