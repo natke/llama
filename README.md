@@ -40,7 +40,7 @@ python run_llama_opt_onnx.py
 
 Same options.
 
-## Run ONNX model optimized with ONNX Runtime
+## Run ONNX model optimized with ONNX Runtime using Optimum
 
 Export the model with ONNX Runtime
 
@@ -92,6 +92,54 @@ Note: this step requires 54GB of memory
     --device DEVICE        Where to run the model
    ```
 
+## Run optimized ONNX model with ONNX Runtime GenAI
+
+Assumes you have CUDA and cmake installed.
+
+1. Clone onnxruntime-genai repo
+
+   ```bash
+   git clone https://github.com/microsoft/onnxruntime-genai.git
+   cd onnxruntime-genai
+   ```
+
+2. Create a conda env
+   ```bash
+   conda create -n genai Python=3.9
+   ```
+
+3. Install onnxruntime
+
+   ```
+   mkdir -p ort
+   cd ort
+   wget https://raw.githubusercontent.com/microsoft/onnxruntime/v1.16.2/include/onnxruntime/core/session/onnxruntime_c_api.h
+   wget https://raw.githubusercontent.com/microsoft/onnxruntime/v1.16.2/include/onnxruntime/core/session/onnxruntime_cxx_api.h
+   wget https://raw.githubusercontent.com/microsoft/onnxruntime/v1.16.2/include/onnxruntime/core/session/onnxruntime_cxx_inline.h
+
+   #Download and unzip 1.16.2 tar.gz
+   ```
+
+
+4. Build onnxruntime-genai
+
+   ```bash
+   # Change back into root directory of onnxruntime-genai
+   cd ..
+   bash build.sh
+   ```
+
+5. Set python path so onnxruntime-genai lib can be found by Python (temporary)
+
+   ```bash
+   export PYTHONPATH=$(cwd)/build
+   ```
+
+6. Run the script
+
+   ```bash
+   python run_llama_genai_ort.py
+   ```
 
 ## Optional steps
 
