@@ -10,11 +10,13 @@ device_type = og.DeviceType.CUDA
 tokenizer = LlamaTokenizer.from_pretrained('meta-llama/Llama-2-7b-hf')
 
 print("Loading model...")
-import pdb; pdb.set_trace()
 
-model=og.Llama_Model("models/meta-llama/Llama-2-7b-hf-chat/rank_0_TinyLlama-1.1B-Chat-V0.3_decoder_merged_model_int4.onnx", device_type)
-#model=og.Llama_Model("models/meta-llama/Llama-2-7b-hf-chat/rank_0_Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx", device_type)
+#model=og.Llama_Model("models/meta-llama/Llama-2-7b-hf-chat/rank_0_TinyLlama-1.1B-Chat-V0.3_decoder_merged_model_int4.onnx", device_type)
+model=og.Llama_Model("models/meta-llama/Llama-2-7b-hf-chat/rank_0_Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx", device_type)
+#model=og.Llama_Model("models/meta-llama/Llama-2-7b-hf-chat/rank_0_Llama-2-7b-chat-hf_decoder_merged_model_fp32.onnx", device_type)
+
 print("Model loaded")
+
 
 # Keep asking for input prompts in an loop
 while True:
