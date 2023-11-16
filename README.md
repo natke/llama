@@ -134,7 +134,7 @@ Assumes you have CUDA and cmake installed.
 5. Set python path so onnxruntime-genai lib can be found by Python (temporary)
 
    ```bash
-   export PYTHONPATH=$(cwd)/build
+   export PYTHONPATH=`pwd`/build
    ```
 
 6. Run the script to generate text with Llama
