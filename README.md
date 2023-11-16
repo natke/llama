@@ -96,7 +96,7 @@ Note: this step requires 54GB of memory
 
 Assumes you have CUDA and cmake installed.
 
-1. Clone onnxruntime-genai repo
+1. Clone onnxruntime-genai repo (Temporaty until there is a release package)
 
    ```bash
    git clone https://github.com/microsoft/onnxruntime-genai.git
@@ -117,7 +117,9 @@ Assumes you have CUDA and cmake installed.
    wget https://raw.githubusercontent.com/microsoft/onnxruntime/v1.16.2/include/onnxruntime/core/session/onnxruntime_cxx_api.h
    wget https://raw.githubusercontent.com/microsoft/onnxruntime/v1.16.2/include/onnxruntime/core/session/onnxruntime_cxx_inline.h
 
-   #Download and unzip 1.16.2 tar.gz
+   wget https://github.com/microsoft/onnxruntime/releases/download/v1.16.2/onnxruntime-linux-x64-gpu-1.16.2.tgz
+   tar xvzf onnxruntime-linux-x64-gpu-1.16.2.tgz
+   cp onnxruntime-linux-x64-gpu-1.16.2/lib/libonnxruntime*.so* .
    ```
 
 
@@ -135,11 +137,15 @@ Assumes you have CUDA and cmake installed.
    export PYTHONPATH=$(cwd)/build
    ```
 
-6. Run the script
+6. Run the script to generate text with Llama
 
    ```bash
+   cd to the directory with your script and models
    python run_llama_genai_ort.py
    ```
+
+33554432
+90177536
 
 ## Optional steps
 
