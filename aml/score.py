@@ -14,6 +14,11 @@ def init():
 
     global session, model, tokenizer
 
+    ## TODO Do these need to be fixed
+    device = "cuda"
+    precision = "fp16"
+    name = "meta-llama/Llama-2-7b-chat-hf"
+
     model_name = "rank_0_Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx"
 
     # use AZUREML_MODEL_DIR to get your deployed model(s). If multiple models are deployed, 
@@ -34,7 +39,7 @@ def init():
 
     logging.info("Loading model ...")
     model = ORTModelForCausalLM.from_pretrained(
-       f'models/{name}',
+       f'{model_dir}/{name}',
        file_name=f"rank_0_{name.split('/')[1]}_decoder_merged_model_{precision}.onnx",
        use_auth_token=True,
        cache_dir="model_cache",
@@ -61,7 +66,9 @@ def run(payload):
     logging.info(output)  
     
     seconds = (end_time - start_time).total_seconds()
-    logging.info(f"Optimum + ONNX Runtime, {num_tokens}, {new_tokens}, {round(seconds, 2)}, {round(num_tokens / seconds, 1)}, {round(new_tokens / seconds, 1)}")    results = {}
+    logging.info(f"Optimum + ONNX Runtime, {num_tokens}, {new_tokens}, {round(seconds, 2)}, {round(num_tokens / seconds, 1)}, {round(new_tokens / seconds, 1)}")
+    
+    results = {}
     
     results["output"] = output
 
@@ -86,7 +93,7 @@ if __name__ == '__main__':
     device = args.device
     new_tokens = args.new_tokens
 
-    payload = {'prompt': prompt, 'new_tokens': new_tokens, 'precision': precision, 'device': device, 'name': name}
+    payload = json.dumps({'prompt': prompt, 'new_tokens': new_tokens, 'precision': precision, 'device': device, 'name': name})
 
     print(run(payload))
 

@@ -2,3 +2,5 @@
 model_cache
 models
 *.download
+*.csv.skipSpecialTokens
+

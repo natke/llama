@@ -54,7 +54,7 @@ end_time = datetime.datetime.now()
 
 print(generate_ids)
 
-output = tokenizer.batch_decode(generate_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)[0] 
+output = tokenizer.batch_decode(generate_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False) 
 
 print(prompt, end=' ', flush=True)
 print(output, end='', flush=True)

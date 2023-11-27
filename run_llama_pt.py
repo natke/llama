@@ -20,10 +20,13 @@ model = LlamaForCausalLM.from_pretrained(f"{name}", cache_dir="model_cache").hal
 
 inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
+num_prompt_tokens = inputs.input_ids.shape[1]
+
 # Generate
 start_time = datetime.datetime.now()
 generate_ids = model.generate(inputs.input_ids, max_new_tokens=new_tokens, do_sample=True, top_p=0.9)
 num_tokens = generate_ids.size(dim=1)
+num_new_tokens = num_tokens - num_prompt_tokens
 output = tokenizer.batch_decode(generate_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)[0]
 end_time = datetime.datetime.now()
 
@@ -31,4 +34,4 @@ print(output)
 seconds = (end_time - start_time).total_seconds()
 #print(f"Total tokens per second = {round(num_tokens / seconds, 1)} ({num_tokens} in {round(seconds, 1)}s)")
 #print(f"New tokens per second = {round(new_tokens / seconds, 1)} ({new_tokens} in {round(seconds, 2)}s)")
-print(f"PyTorch, {num_tokens}, {new_tokens}, {round(seconds, 2)}, {round(num_tokens / seconds, 1)}, {round(new_tokens / seconds, 1)}")
+print(f"PyTorch, {num_tokens}, {num_new_tokens}, {round(seconds, 2)}, {round(num_tokens / seconds, 1)}, {round(num_new_tokens / seconds, 1)}")
