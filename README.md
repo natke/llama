@@ -144,8 +144,96 @@ Assumes you have CUDA and cmake installed.
    python run_llama_genai_ort.py
    ```
 
-33554432
-90177536
+
+## Deploy and run cloud endpoint in Azure
+
+See https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-online-endpoints?view=azureml-api-2&tabs=azure-cli
+
+### Test scoring script locally
+
+1. Install other dependencies as well as `azureml-inference-server-http`
+
+2. Run `azmlinfsrv --entry_script score.py`
+
+3. In another terminal, send a prompt to the endpoint
+
+   ```bash
+   curl --header "Content-Type: application/json" \
+        --request POST --data @data.json \
+        http://localhost:5001/score
+   ```
+
+### Test endpoint and deployment locally
+
+1. Setup the endpoint name, resource group etc
+
+   ```bash
+   export ENDPOINT_NAME=llama
+   export AZURE_RESOURCE_GROUP=...
+   export AZURE_SUBSCRIPTION=...
+   export AZURE_MACHINE_LEARNING_WORKSPACE=...
+   export HUGGINGFACE_TOKEN=...
+   az login --use-device-code
+   az account set --subscription ${AZURE_SUBSCRIPTION}
+   az configure --defaults workspace=${AZURE_MACHINE_LEARNING_WORKSPACE} group=${AZURE_RESOURCE_GROUP}
+   ```
+
+2. Create a local endpoint
+
+   ```bash
+   az ml online-endpoint create --local -n $ENDPOINT_NAME -f endpoint.yml
+   ```
+
+3. Create a local deployment
+
+   Note: a slightly different deployment spec is required for local deployments, as the model is specified as a local path rather than model deployment identifier.
+
+   ```bash
+   az ml online-deployment create --local -n blue --endpoint $ENDPOINT_NAME -f deploy-local.yml --set environment_variables.HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+   ```
+
+4. (Optional) Update the deployment
+
+   ```bash
+   az ml online-deployment update --local -n blue --endpoint $ENDPOINT_NAME -f deploy.yml
+   ```
+
+### Run the endpoint in Azure
+
+1. Upload the model to Azure
+
+   Model variants and names
+   - Llama-2-7b-chat-hf-fp16
+
+
+   ```bash
+   cd models/meta-llama
+   az ml model create --name Llama-2-7b-chat-hf-fp16 --path Llama-2-7b-chat-hf
+   ```
+
+2. Create the endpoint in Azure
+
+   ```bash
+   az ml online-endpoint create -n $ENDPOINT_NAME -f endpoint.yml
+   ```
+
+3. Create the deployment in Azure
+
+   ```bash
+   az ml online-deployment create -n blue --endpoint $ENDPOINT_NAME -f deploy.yml --set environment_variables.HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN} --set environment_variables.PYTORCH_NO_CUDA_MEMORY_CACHING=1   
+   ```
+
+4. Allocate traffic to the endpoint
+
+   ```bash
+    az ml online-endpoint update --name $ENDPOINT_NAME --traffic "green=100"
+   ```
+
+5. Consume the online endpoint
+
+   ```bash
+   curl -H "Authorization: Bearer ${ENDPOINT_TOKEN}" --datafile @data.json https://llama.australiaeast.inference.ml.azure.com/score
+   ```
 
 ## Optional steps
 
@@ -164,3 +252,13 @@ az account set --subscription <subscription>
 az storage blob upload -f models/meta-llama/Llama-2-7b-chat-hf/rank_0_Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx --container-name  models --account-name  nakershadevstorage 
 az storage blob upload -f models/meta-llama/Llama-2-7b-chat-hf/Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx.data --container-name  models --account-name  nakershadevstorage 
 ```
+
+### Azure ML errors
+
+    output_buffer = torch.empty(np.prod(output_shape), dtype=torch_type, device=self.device).contiguous()
+torch.cuda.OutOfMemoryError: CUDA out of memory.
+Tried to allocate 20.00 MiB.
+GPU 0 has a total capacty of 15.77 GiB of which 12.88 MiB is free. Process 13953 has 15.76 GiB memory in use.
+  Of the allocated memory 480.73 MiB is allocated by PyTorch, and 63.27 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+  PYTORCH_NO_CUDA_MEMORY_CACHING=1

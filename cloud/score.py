@@ -7,19 +7,23 @@ import numpy as np
 import onnxruntime
 from transformers import LlamaTokenizer
 from optimum.onnxruntime import ORTModelForCausalLM
+from huggingface_hub import login
 
 # Perform the one-off intialization for the prediction. The init code is run once when the endpoint is setup.
 def init():
     logging.info("Running init() ...")
 
-    global session, model, tokenizer
+    logging.info(f"{os.getenv('HUGGINGFACE_TOKEN')}")
+ 
+    huggingface_token = os.getenv('HUGGINGFACE_TOKEN')
+    login(token=huggingface_token)
+
+    global session, model, tokenizer, device
 
     ## TODO Do these need to be fixed
     device = "cuda"
     precision = "fp16"
     name = "meta-llama/Llama-2-7b-chat-hf"
-
-    model_name = "rank_0_Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx"
 
     # use AZUREML_MODEL_DIR to get your deployed model(s). If multiple models are deployed, 
     # model_path = os.path.join(os.getenv('AZUREML_MODEL_DIR'), '$MODEL_NAME/$VERSION/$MODEL_FILE_NAME')
@@ -38,11 +42,11 @@ def init():
     tokenizer.pad_token = "[PAD]"
 
     logging.info("Loading model ...")
+    model_name = name.split('/')[1]
     model = ORTModelForCausalLM.from_pretrained(
-       f'{model_dir}/{name}',
-       file_name=f"rank_0_{name.split('/')[1]}_decoder_merged_model_{precision}.onnx",
+       f'{model_dir}/{model_name}',
+       file_name=f"rank_0_{model_name}_decoder_merged_model_{precision}.onnx",
        use_auth_token=True,
-       cache_dir="model_cache",
        provider=provider
     )
     
@@ -57,8 +61,9 @@ def run(payload):
 
     logging.info("Running generate ...")
     # Generate
-    start_time = datetime.datetime.now()  
-    generate_ids = model.generate(**inputs, max_new_tokens=data['new_tokens'], do_sample=True, top_p=0.9)   
+    start_time = datetime.datetime.now() 
+    new_tokens = data['new_tokens'] 
+    generate_ids = model.generate(**inputs, max_new_tokens=new_tokens, do_sample=True, top_p=0.9)   
     num_tokens = generate_ids.size(dim=1)
     output = tokenizer.batch_decode(generate_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)[0] 
     end_time = datetime.datetime.now()
