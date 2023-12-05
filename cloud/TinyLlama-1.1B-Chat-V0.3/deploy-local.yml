@@ -1,0 +1,13 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: blue
+endpoint_name: llama
+model:
+  path: ../models/meta-llama/Llama-2-7b-chat-hf/rank_0_Llama-2-7b-chat-hf_decoder_merged_model_fp16.onnx
+code_configuration:
+  code: ./
+  scoring_script: score.py
+environment: 
+  conda_file: ./env.yml
+  image: mcr.microsoft.com/azureml/inference-base-gpu-2004:latest
+instance_type: Standard_NC6s_v3
+instance_count: 1

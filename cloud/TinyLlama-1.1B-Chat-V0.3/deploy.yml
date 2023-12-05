@@ -1,0 +1,12 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: tiny-blue
+endpoint_name: llama
+model: azureml:TinyLlama-chat-fp16:1
+code_configuration:
+  code: ../
+  scoring_script: score.py
+environment: 
+  conda_file: ../env.yml
+  image: mcr.microsoft.com/azureml/inference-base-gpu-2004:latest
+instance_type: Standard_NC24s_v3
+instance_count: 1

@@ -22,8 +22,10 @@ def init():
 
     ## TODO Do these need to be fixed
     device = "cuda"
+    #precision = os.getenv('PRECISION')
     precision = "fp16"
-    name = "meta-llama/Llama-2-7b-chat-hf"
+    #name = os.getenv('MODEL_NAME')
+    name = "PY007/TinyLlama-1.1B-Chat-V0.3"
 
     # use AZUREML_MODEL_DIR to get your deployed model(s). If multiple models are deployed, 
     # model_path = os.path.join(os.getenv('AZUREML_MODEL_DIR'), '$MODEL_NAME/$VERSION/$MODEL_FILE_NAME')
@@ -36,7 +38,6 @@ def init():
     else:
         provider = "CPUExecutionProvider"
 
-    
     logging.info("Loading tokenizer ...")
     tokenizer = LlamaTokenizer.from_pretrained(f"{name}", use_auth_token=True)
     tokenizer.pad_token = "[PAD]"

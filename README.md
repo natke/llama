@@ -65,7 +65,7 @@ Note: this step requires 54GB of memory
 
    ```bash
    huggingface-cli login --token <token>
-   python -m onnxruntime.transformers.models.llama.convert_to_onnx -m meta-llama/Llama-2-7b-chat-hf --output models/meta-llama/Llama-2-7b-chat-hf --execution_provider cuda --precision fp16
+   python -m onnxruntime.transformers.models.llama.convert_to_onnx -m meta-llama/Llama-2-7b-chat-hf --output models/meta-llama/Llama-2-7b-chat-hf --execution_provider cuda --precision fp16 --use_gqa
    ```
 
 
@@ -203,7 +203,8 @@ See https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-onlin
 1. Upload the model to Azure
 
    Model variants and names
-   - Llama-2-7b-chat-hf-fp16
+   - meta-llama/Llama-2-7b-chat-hf-fp16
+   - PY007/TinyLlama-1.1B-Chat-V0.3
 
 
    ```bash
@@ -220,19 +221,19 @@ See https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-onlin
 3. Create the deployment in Azure
 
    ```bash
-   az ml online-deployment create -n blue --endpoint $ENDPOINT_NAME -f deploy.yml --set environment_variables.HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN} --set environment_variables.PYTORCH_NO_CUDA_MEMORY_CACHING=1   
+   az ml online-deployment create -n blue --endpoint $ENDPOINT_NAME -f deploy.yml --set environment_variables.HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
    ```
 
 4. Allocate traffic to the endpoint
 
    ```bash
-    az ml online-endpoint update --name $ENDPOINT_NAME --traffic "green=100"
+   az ml online-endpoint update --name $ENDPOINT_NAME --traffic "green=100"
    ```
 
 5. Consume the online endpoint
 
    ```bash
-   curl -H "Authorization: Bearer ${ENDPOINT_TOKEN}" --datafile @data.json https://llama.australiaeast.inference.ml.azure.com/score
+   curl -H "Authorization: Bearer ${ENDPOINT_TOKEN}" --data @data.json https://llama.australiaeast.inference.ml.azure.com/score
    ```
 
 ## Optional steps
