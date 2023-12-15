@@ -30,6 +30,7 @@ python run_llama_pt.py --name <model> --prompt <prompt>
 where &lt;model&gt; can be:
 * `PY007/TinyLlama-1.1B-intermediate-step-480k-1T`
 * `PY007/TinyLlama-1.1B-Chat-v0.3`
+* `TinyLlama/TinyLlama-1.1B-Chat-v0.6`
 * (default)`meta-llama/Llama-2-7b-hf` if you have access to the gated meta model
 
 ## Run Optimum ONNX model
