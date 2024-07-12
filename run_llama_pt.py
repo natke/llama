@@ -16,7 +16,9 @@ device = args.device
 new_tokens = args.new_tokens
 
 tokenizer = LlamaTokenizer.from_pretrained(f"{name}", cache_dir="model_cache")
-model = LlamaForCausalLM.from_pretrained(f"{name}", cache_dir="model_cache").half().to(device)
+#model = LlamaForCausalLM.from_pretrained(f"{name}", cache_dir="model_cache").half().to(device)
+
+model = LlamaForCausalLM.from_pretrained(f"{name}", cache_dir="model_cache").to(device)
 
 inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
