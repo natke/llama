@@ -17,10 +17,6 @@ This sample shows you how to run the Llama model with PyTorch, HuggingFace and O
 1. Sign up to get access to the Llama model on HuggingFace (e.g. https://huggingface.co/meta-llama/Llama-2-7b-hf-chat)
 
 
-## Notes on model variants and execution targets:
-* Tiny Llama requires GQA
-* GQA only works with fp16 CUDA
-
 ## Run PyTorch model
 
 ```bash
@@ -95,50 +91,13 @@ Note: this step requires 54GB of memory
 
 ## Run optimized ONNX model with ONNX Runtime GenAI
 
-Assumes you have CUDA and cmake installed.
-
-1. Clone onnxruntime-genai repo (Temporaty until there is a release package)
+1. Generate the optimized ONNX model with model builder
 
    ```bash
-   git clone https://github.com/microsoft/onnxruntime-genai.git
-   cd onnxruntime-genai
+   python -m onnxruntime.models.builder [-m <HF model name> | -i <path to local PyTorch model] -e cpu -p int4 -o <output path>
    ```
 
-2. Create a conda env
-   ```bash
-   conda create -n genai Python=3.9
-   ```
-
-3. Install onnxruntime
-
-   ```
-   mkdir -p ort
-   cd ort
-   wget https://raw.githubusercontent.com/microsoft/onnxruntime/v1.16.2/include/onnxruntime/core/session/onnxruntime_c_api.h
-   wget https://raw.githubusercontent.com/microsoft/onnxruntime/v1.16.2/include/onnxruntime/core/session/onnxruntime_cxx_api.h
-   wget https://raw.githubusercontent.com/microsoft/onnxruntime/v1.16.2/include/onnxruntime/core/session/onnxruntime_cxx_inline.h
-
-   wget https://github.com/microsoft/onnxruntime/releases/download/v1.16.2/onnxruntime-linux-x64-gpu-1.16.2.tgz
-   tar xvzf onnxruntime-linux-x64-gpu-1.16.2.tgz
-   cp onnxruntime-linux-x64-gpu-1.16.2/lib/libonnxruntime*.so* .
-   ```
-
-
-4. Build onnxruntime-genai
-
-   ```bash
-   # Change back into root directory of onnxruntime-genai
-   cd ..
-   bash build.sh
-   ```
-
-5. Set python path so onnxruntime-genai lib can be found by Python (temporary)
-
-   ```bash
-   export PYTHONPATH=`pwd`/build
-   ```
-
-6. Run the script to generate text with Llama
+2. Run the script to generate text with Llama
 
    ```bash
    cd to the directory with your script and models
