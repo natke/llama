@@ -125,7 +125,13 @@ See https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-onlin
 
 ### Test endpoint and deployment locally
 
-1. Setup the endpoint name, resource group etc
+1. Setup
+
+```bash
+az extension add --name ml --alow-preview
+```
+
+2. Setup the endpoint name, resource group etc
 
    ```bash
    export ENDPOINT_NAME=llama
@@ -138,13 +144,13 @@ See https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-onlin
    az configure --defaults workspace=${AZURE_MACHINE_LEARNING_WORKSPACE} group=${AZURE_RESOURCE_GROUP}
    ```
 
-2. Create a local endpoint
+3. Create a local endpoint
 
    ```bash
    az ml online-endpoint create --local -n $ENDPOINT_NAME -f endpoint.yml
    ```
 
-3. Create a local deployment
+4. Create a local deployment
 
    Note: a slightly different deployment spec is required for local deployments, as the model is specified as a local path rather than model deployment identifier.
 
@@ -152,7 +158,7 @@ See https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-onlin
    az ml online-deployment create --local -n blue --endpoint $ENDPOINT_NAME -f deploy-local.yml --set environment_variables.HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
    ```
 
-4. (Optional) Update the deployment
+5. (Optional) Update the deployment
 
    ```bash
    az ml online-deployment update --local -n blue --endpoint $ENDPOINT_NAME -f deploy.yml
