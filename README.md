@@ -111,11 +111,13 @@ See https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-onlin
 
 ### Test scoring script locally
 
-1. Install other dependencies as well as `azureml-inference-server-http`
+1. Install docker
+   
+2. Install other dependencies as well as `azureml-inference-server-http`
 
-2. Run `azmlinfsrv --entry_script score.py`
+3. Run `azmlinfsrv --entry_script score.py`
 
-3. In another terminal, send a prompt to the endpoint
+4. In another terminal, send a prompt to the endpoint
 
    ```bash
    curl --header "Content-Type: application/json" \
@@ -132,6 +134,8 @@ az extension add --name ml --alow-preview
 ```
 
 2. Setup the endpoint name, resource group etc
+   
+   **Linux/Mac**
 
    ```bash
    export ENDPOINT_NAME=llama
@@ -143,6 +147,20 @@ az extension add --name ml --alow-preview
    az account set --subscription ${AZURE_SUBSCRIPTION}
    az configure --defaults workspace=${AZURE_MACHINE_LEARNING_WORKSPACE} group=${AZURE_RESOURCE_GROUP}
    ```
+
+   **Windows**
+
+   ```cmd
+   set ENDPOINT_NAME=llama
+   set AZURE_RESOURCE_GROUP=...
+   set AZURE_SUBSCRIPTION=...
+   set AZURE_MACHINE_LEARNING_WORKSPACE=...
+   set HUGGINGFACE_TOKEN=...
+   az login --use-device-code
+   az account set --subscription %AZURE_SUBSCRIPTION%
+   az configure --defaults workspace=%AZURE_MACHINE_LEARNING_WORKSPACE% group=%AZURE_RESOURCE_GROUP%
+   ```
+
 
 3. Create a local endpoint
 
