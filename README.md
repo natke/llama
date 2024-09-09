@@ -220,6 +220,11 @@ az extension add --name ml --alow-preview
    curl -H "Authorization: Bearer ${ENDPOINT_TOKEN}" --data @data.json https://llama.australiaeast.inference.ml.azure.com/score
    ```
 
+## Measure GPU energy consumption
+
+![image](https://github.com/user-attachments/assets/51f44187-343b-4fe4-b075-4bb234b2fcc7)
+
+
 ## Optional steps
 
 ### Build ONNX Runtime from source
